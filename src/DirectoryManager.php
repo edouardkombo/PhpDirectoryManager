@@ -7,7 +7,7 @@ use \RecursiveIteratorIterator;
 use \RecursiveDirectoryIterator;
 use \Exception;
 
-class DirectoryManager extends \DirectoryIterator {
+class DirectoryManager extends DirectoryIterator {
 
     /**
      *
@@ -17,7 +17,7 @@ class DirectoryManager extends \DirectoryIterator {
     
     /**
      *
-     * @var \DirectoryIterator 
+     * @var DirectoryIterator 
      */
     public $iterator;
     
@@ -185,11 +185,14 @@ class DirectoryManager extends \DirectoryIterator {
         );
 
         foreach ($files as $fileInfo) {
-            if (!empty($fileToDelete)) {
-                ($fileInfo->getFilename() === $fileToDelete) ? 
-                    unlink($fileInfo->getRealPath()) : '' ;
-            } else {
+            
+            if (($fileInfo->getFilename() === $fileToDelete) && !empty($fileToDelete)) {
                 unlink($fileInfo->getRealPath());
+                $this->updateFiles($fileInfo);
+                
+            } else if (empty($fileToDelete)) { 
+                unlink($fileInfo->getRealPath());
+                $this->updateFiles($fileInfo);
             }            
             
         }
@@ -198,6 +201,21 @@ class DirectoryManager extends \DirectoryIterator {
         (empty($fileToDelete)) ? rmdir($this->directory) : ''; 
         
         return true;
-    }    
+    }
     
+    /**
+     * Update file content
+     * 
+     * @param object $info Informations on files
+     * 
+     * @return array
+     */
+    private function updateFiles($info)
+    {
+        if ($info->getFilename() === $this->fileNames[$info->getFilename()]) {
+            unset($this->fileNames[$info->getFilename()]);
+        }
+        
+        return $this->fileNames;
+    } 
 }

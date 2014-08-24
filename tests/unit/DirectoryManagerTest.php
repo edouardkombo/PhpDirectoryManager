@@ -126,7 +126,18 @@ class DirectoryManagerTest extends \Codeception\TestCase\Test
         $this->directoryManager->delete($this->file);
         
         return $this->assertFileNotExists($this->dir . $this->file);
-    }    
+    } 
+    
+    /**
+     * Just delete one file in directory
+     */
+    public function testIfDeletedFIleHasBeenRemovedFromFileNamesProperty()
+    {
+        $fileNames = $this->directoryManager->fileNames;
+        
+        return $this->assertArrayNotHasKey($this->file, $fileNames);
+        
+    }     
     
     /**
      * Now delete everyting in this directory
