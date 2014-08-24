@@ -90,7 +90,7 @@ class DirectoryManager extends \DirectoryIterator {
                 $files[$info->__toString()] = $info;
                 
                 //Save filenames to work on it later
-                $this->fileNames[$info->getMTime()] = $info->getFilename();
+                $this->fileNames[$info->getFilename()] = $info->getFilename();
             
             } else if (!$info->isDot()) {
                 
@@ -106,6 +106,17 @@ class DirectoryManager extends \DirectoryIterator {
         }
         
         return $this->files;        
+    }
+    
+    
+    /**
+     * Get directories content
+     * 
+     * @return array
+     */
+    public function getContent()
+    {
+        return (array) $this->fileNames;
     }
 
     /**
@@ -130,6 +141,8 @@ class DirectoryManager extends \DirectoryIterator {
      * 
      * @param string $newDirectory New directory where to move files
      * @param string $fileToMove   Specific file to move
+     * 
+     * @return boolean
      */
     public function move($newDirectory, $fileToMove = null)
     {
@@ -137,18 +150,22 @@ class DirectoryManager extends \DirectoryIterator {
             
             $this->createDirectory($newDirectory);
             
-            foreach ($this->fileNames as $file){
+            foreach ($this->fileNames as $key => $file){
                 $basePath = $this->directory . DIRECTORY_SEPARATOR . $file;
                 $newPath  = $newDirectory . DIRECTORY_SEPARATOR . $file;
 
-                if (isset($fileToMove)) {
+                if (!empty($fileToMove)) {
                     ($file === $fileToMove) ? copy($basePath, $newPath) : '' ;
                 } else {
                     copy($basePath, $newPath);
                 }
 
             }
+            
+            return true;
         }
+        
+        return false;
     }
      
     /**
@@ -168,7 +185,7 @@ class DirectoryManager extends \DirectoryIterator {
         );
 
         foreach ($files as $fileInfo) {
-            if (isset($fileToDelete)) {
+            if (!empty($fileToDelete)) {
                 ($fileInfo->getFilename() === $fileToDelete) ? 
                     unlink($fileInfo->getRealPath()) : '' ;
             } else {
@@ -178,7 +195,7 @@ class DirectoryManager extends \DirectoryIterator {
         }
 
         //Remove all empty directories        
-        rmdir($this->directory); 
+        (empty($fileToDelete)) ? rmdir($this->directory) : ''; 
         
         return true;
     }    
