@@ -1,4 +1,18 @@
 {
+    "name": "edouardkombo/php-directory-manager",
+    "type": "class",
+    "description": "Simple class to manage directories in php using directoryIterator.",
+    "keywords": ["php Directory manager","PDM"],
+    "homepage": "https://github.com/edouardkombo/PhpDirectoryManager",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Edouard Kombo",
+            "email": "edouard.kombo@gmail.com",
+            "homepage": "http://creativcoders.wordpress.com",
+            "role": "Developer"
+        }
+    ],     
     "autoload": {
         "psr-0": { "": "" }
     },    
